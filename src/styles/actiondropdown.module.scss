@@ -1,0 +1,118 @@
+@use './token' as *;
+
+// ── Wrapper ───────────────────────────────────────────────────────────────────
+.wrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+// ── Trigger button (⋮) ───────────────────────────────────────────────────────
+.trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: $radius-sm;
+  border: none;
+  background: transparent;
+  color: $text-muted;
+  cursor: pointer;
+  transition: all $t-fast;
+  padding: 0;
+
+  &:hover {
+    background: $bg-hover;
+    color: $text-secondary;
+  }
+
+  &:active {
+    background: $bg-active;
+  }
+}
+
+.triggerActive {
+  background: $bg-active;
+  color: $text-accent;
+}
+
+// ── Dropdown overlay (click-away area) ────────────────────────────────────────
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 998;
+}
+
+// ── Dropdown menu ─────────────────────────────────────────────────────────────
+.dropdown {
+  z-index: 999;
+  width: 140px;
+  padding: 3px 0;
+  background: $bg-elevated;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+  box-shadow: $shadow-md;
+  animation: dropIn 0.12s ease forwards;
+  pointer-events: auto;
+}
+
+@keyframes dropIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+// ── Menu items ────────────────────────────────────────────────────────────────
+.item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 5px 10px;
+  border: none;
+  background: none;
+  color: $text-secondary;
+  font-family: $font-mono;
+  font-size: 11px;
+  cursor: pointer;
+  text-align: left;
+  transition: all $t-fast;
+  white-space: nowrap;
+  box-sizing: border-box;
+
+  &:hover {
+    background: $bg-hover;
+    color: $text-primary;
+  }
+}
+
+.itemDanger {
+  color: $color-error;
+
+  &:hover {
+    background: rgba($color-error, 0.1);
+    color: $color-error;
+  }
+}
+
+.itemDisabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+
+  &:hover {
+    background: none;
+    color: $text-secondary;
+  }
+}
+
+// ── Divider ───────────────────────────────────────────────────────────────────
+.divider {
+  height: 1px;
+  margin: $s1 0;
+  background: $border-subtle;
+}

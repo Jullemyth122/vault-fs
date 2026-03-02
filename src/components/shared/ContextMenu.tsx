@@ -80,6 +80,17 @@ export function ContextMenu({ state, onClose }: ContextMenuProps) {
     const [showNewFile, setShowNewFile] = useState(false);
     const [showColors, setShowColors] = useState(false);
 
+    // Keep a reference to the node that modals should act on.
+    // This persists even after the menu overlay is closed.
+    const [targetNode, setTargetNode] = useState<TreeNode | null>(null);
+
+    // Whenever the menu opens with a new node, capture it
+    useEffect(() => {
+        if (isOpen && node) {
+            setTargetNode(node);
+        }
+    }, [isOpen, node]);
+
     const [pos, setPos] = useState({ x, y });
 
     useEffect(() => {
@@ -102,22 +113,50 @@ export function ContextMenu({ state, onClose }: ContextMenuProps) {
         return () => window.removeEventListener("keydown", handler);
     }, [isOpen, onClose]);
 
-    if (!isOpen || !node || !vault) return null;
+    // Check if any modal is currently open
+    const anyModalOpen = showRename || showDelete || showNewFolder || showNewFile;
 
-    const isRoot = node.id === vault.tree.id;
-    const isFolder = node.type === "folder";
-    const canAdd = canAddChild(node, vault.mode);
+    // If menu is closed AND no modal is open, render nothing.
+    // This lets modals stay mounted even after the menu overlay disappears.
+    if (!anyModalOpen && (!isOpen || !node || !vault)) return null;
+
+    // Use the targetNode for modals (persists after menu close),
+    // fall back to the current node from the menu state.
+    const activeNode = targetNode ?? node;
+    if (!activeNode || !vault) return null;
+
+    const isRoot = activeNode.id === vault.tree.id;
+    const isFolder = activeNode.type === "folder";
+    const canAdd = canAddChild(activeNode, vault.mode);
+
+    // Helper: closes the menu overlay but keeps the component mounted
+    // (modals will keep it alive via anyModalOpen)
+    const closeMenuOnly = () => {
+        onClose();
+    };
 
     const menuItem = (
         icon: React.ReactNode,
         label: string,
         onClick: () => void,
         disabled = false,
-        variant: "default" | "danger" = "default"
+        variant: "default" | "danger" = "default",
+        opensModal = false
     ) => (
         <button
             key={label}
-            onClick={() => { if (!disabled) { onClick(); onClose(); } }}
+            onClick={() => {
+                if (!disabled) {
+                    onClick();
+                    // Only auto-close the menu if this item does NOT open a modal.
+                    // Modal-opening items close the overlay but keep the component mounted.
+                    if (opensModal) {
+                        closeMenuOnly();
+                    } else {
+                        onClose();
+                    }
+                }
+            }}
             disabled={disabled}
             className={`${s.menuItem} ${disabled ? s.menuItemDisabled : ""} ${variant === "danger" ? s.menuItemDanger : ""}`}>
             {icon}
@@ -131,88 +170,97 @@ export function ContextMenu({ state, onClose }: ContextMenuProps) {
 
     return createPortal(
         <>
-            <div className={s.overlay} onClick={onClose} />
+            {/* Only render the menu overlay when it's actually open */}
+            {isOpen && (
+                <>
+                    <div
+                        className={s.overlay}
+                        onMouseDown={onClose}
+                        onContextMenu={(e) => { e.preventDefault(); onClose(); }}
+                    />
 
-            <div
-                ref={menuRef}
-                className={s.menu}
-                style={{
-                    top: pos.y,
-                    left: pos.x,
-                    opacity: pos.x === x && pos.y === y ? 0 : 1,
-                }}>
+                    <div
+                        ref={menuRef}
+                        className={s.menu}
+                        style={{
+                            top: pos.y,
+                            left: pos.x,
+                            opacity: pos.x === x && pos.y === y ? 0 : 1,
+                        }}>
 
-                <div className={s.nodeLabel}>
-                    <span className={isFolder ? s.nodeLabelIconFolder : s.nodeLabelIconFile}>
-                        {isFolder ? "📁" : "📄"}
-                    </span>
-                    <span className={s.nodeLabelName}>{node.name}</span>
-                </div>
-
-                {isFolder && menuItem(<FolderPlus size={13} />, "New Folder", () => setShowNewFolder(true), !canAdd)}
-                {isFolder && menuItem(<FilePlus size={13} />, "New File", () => setShowNewFile(true), !canAdd)}
-                {isFolder && divider("d1")}
-
-                {menuItem(<Pencil size={13} />, "Rename", () => setShowRename(true))}
-
-                {isFolder && (
-                    <div className={s.colorPickerWrapper}>
-                        <button
-                            onClick={() => setShowColors((prev: boolean) => !prev)}
-                            className={`${s.menuItem} ${showColors ? s.menuItemActive : ""}`}>
-                            <span className={s.menuItemInner}>
-                                <Palette size={13} />
-                                <span>Set Color</span>
+                        <div className={s.nodeLabel}>
+                            <span className={isFolder ? s.nodeLabelIconFolder : s.nodeLabelIconFile}>
+                                {isFolder ? "📁" : "📄"}
                             </span>
-                            <ChevronRight size={11} />
-                        </button>
+                            <span className={s.nodeLabelName}>{activeNode.name}</span>
+                        </div>
 
-                        {showColors && (
-                            <div className={s.colorPanel}>
+                        {isFolder && menuItem(<FolderPlus size={13} />, "New Folder", () => setShowNewFolder(true), !canAdd, "default", true)}
+                        {isFolder && menuItem(<FilePlus size={13} />, "New File", () => setShowNewFile(true), !canAdd, "default", true)}
+                        {isFolder && divider("d1")}
+
+                        {menuItem(<Pencil size={13} />, "Rename", () => setShowRename(true), false, "default", true)}
+
+                        {isFolder && (
+                            <div className={s.colorPickerWrapper}>
                                 <button
-                                    onClick={() => { fs.updateColor(node.id, null); onClose(); }}
-                                    title="No color"
-                                    className={s.colorSwatch_clear}>
-                                    ✕
+                                    onClick={() => setShowColors((prev: boolean) => !prev)}
+                                    className={`${s.menuItem} ${showColors ? s.menuItemActive : ""}`}>
+                                    <span className={s.menuItemInner}>
+                                        <Palette size={13} />
+                                        <span>Set Color</span>
+                                    </span>
+                                    <ChevronRight size={11} />
                                 </button>
-                                {FOLDER_COLORS.map((c) => (
-                                    <button
-                                        key={c.hex}
-                                        onClick={() => { fs.updateColor(node.id, c.hex); onClose(); }}
-                                        title={c.label}
-                                        className={`${s.colorSwatch} ${node.meta.color === c.hex ? s.colorSwatchActive : ""}`}
-                                        style={{ background: c.hex }}
-                                    />
-                                ))}
+
+                                {showColors && (
+                                    <div className={s.colorPanel}>
+                                        <button
+                                            onClick={() => { fs.updateColor(activeNode.id, null); onClose(); }}
+                                            title="No color"
+                                            className={s.colorSwatch_clear}>
+                                            ✕
+                                        </button>
+                                        {FOLDER_COLORS.map((c) => (
+                                            <button
+                                                key={c.hex}
+                                                onClick={() => { fs.updateColor(activeNode.id, c.hex); onClose(); }}
+                                                title={c.label}
+                                                className={`${s.colorSwatch} ${activeNode.meta.color === c.hex ? s.colorSwatchActive : ""}`}
+                                                style={{ background: c.hex }}
+                                            />
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         )}
+
+                        {divider("d2")}
+
+                        {menuItem(<Trash2 size={13} />, "Delete", () => setShowDelete(true), isRoot, "danger", true)}
                     </div>
-                )}
-
-                {divider("d2")}
-
-                {menuItem(<Trash2 size={13} />, "Delete", () => setShowDelete(true), isRoot, "danger")}
-            </div>
+                </>
+            )}
 
             <Modal.Input
                 isOpen={showRename}
                 onClose={() => setShowRename(false)}
-                onSubmit={(name) => fs.rename(node.id, name)}
+                onSubmit={(name) => fs.rename(activeNode.id, name)}
                 title="Rename"
                 label="New name"
-                initialValue={node.name}
+                initialValue={activeNode.name}
                 submitLabel="Rename"
             />
 
             <Modal.Confirm
                 isOpen={showDelete}
                 onClose={() => setShowDelete(false)}
-                onConfirm={() => fs.remove(node.id)}
-                title={`Delete ${node.type}`}
+                onConfirm={() => fs.remove(activeNode.id)}
+                title={`Delete ${activeNode.type}`}
                 message={
-                    isFolder && node.children.length > 0
-                        ? `Delete "${node.name}" and all ${node.children.length} item(s) inside it? This cannot be undone.`
-                        : `Delete "${node.name}"? This cannot be undone.`
+                    isFolder && activeNode.children.length > 0
+                        ? `Delete "${activeNode.name}" and all ${activeNode.children.length} item(s) inside it? This cannot be undone.`
+                        : `Delete "${activeNode.name}"? This cannot be undone.`
                 }
                 confirmLabel="Delete"
                 variant="danger"
@@ -221,7 +269,7 @@ export function ContextMenu({ state, onClose }: ContextMenuProps) {
             <Modal.Input
                 isOpen={showNewFolder}
                 onClose={() => setShowNewFolder(false)}
-                onSubmit={(name) => fs.createFolder(name, node.id)}
+                onSubmit={(name) => fs.createFolder(name, activeNode.id)}
                 title="New Folder"
                 label="Folder name"
                 placeholder="my-folder"
@@ -231,7 +279,7 @@ export function ContextMenu({ state, onClose }: ContextMenuProps) {
             <Modal.Input
                 isOpen={showNewFile}
                 onClose={() => setShowNewFile(false)}
-                onSubmit={(name) => fs.createFile(name, node.id)}
+                onSubmit={(name) => fs.createFile(name, activeNode.id)}
                 title="New File"
                 label="File name"
                 placeholder="notes.txt"

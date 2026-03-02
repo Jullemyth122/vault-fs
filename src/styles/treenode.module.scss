@@ -19,11 +19,20 @@
   &:hover:not(.rowSelected) {
     background: $bg-hover;
   }
+
+  // Show the ⋮ button on hover
+  &:hover .actions {
+    opacity: 1;
+  }
 }
 
 // Selected row state (applied alongside .row)
 .rowSelected {
   background: $bg-active;
+
+  .actions {
+    opacity: 1;
+  }
 }
 
 // Chevron toggle icon
@@ -73,6 +82,13 @@
   font-size: 10px;
   color: $text-muted;
   flex-shrink: 0;
+}
+
+// ⋮ Action button — hidden by default, shown on hover
+.actions {
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity $t-fast;
   margin-left: auto;
 }
 
