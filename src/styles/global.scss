@@ -1,0 +1,138 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// global.scss
+// Base resets, typography, and utility classes.
+// This is the ONLY file imported in main.tsx.
+// ─────────────────────────────────────────────────────────────────────────────
+
+@use './token' as *;
+
+// ── Google Fonts ──────────────────────────────────────────────────────────────
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+// ── Reset ─────────────────────────────────────────────────────────────────────
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  height: 100%;
+  font-size: 14px;
+}
+
+body {
+  height: 100%;
+  background-color: $bg-void;
+  color: $text-primary;
+  font-family: $font-ui;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+}
+
+#root {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+// ── Scrollbars ────────────────────────────────────────────────────────────────
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: $border-default;
+  border-radius: 99px;
+  
+  &:hover {
+    background: $border-strong;
+  }
+}
+
+// ── Focus ─────────────────────────────────────────────────────────────────────
+:focus-visible {
+  outline: 2px solid $accent-light;
+  outline-offset: 2px;
+  border-radius: $radius-sm;
+}
+
+// ── Buttons reset ─────────────────────────────────────────────────────────────
+button {
+  font-family: inherit;
+  cursor: pointer;
+  
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+// ── Inputs reset ──────────────────────────────────────────────────────────────
+input, textarea {
+  font-family: inherit;
+  
+  &::placeholder {
+    color: $text-muted;
+  }
+}
+
+// ── Animations ────────────────────────────────────────────────────────────────
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(109, 40, 217, 0.15); }
+  50%       { box-shadow: 0 0 40px rgba(109, 40, 217, 0.35); }
+}
+
+@keyframes scanline {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+// ── Utility classes ───────────────────────────────────────────────────────────
+.u-mono {
+  font-family: $font-mono;
+}
+
+.u-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.u-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.u-fade-in {
+  animation: fadeIn 0.25s ease forwards;
+}

@@ -1,0 +1,142 @@
+@use './token' as *;
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: $s4;
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.15s ease forwards;
+}
+
+.dialog {
+  width: 100%;
+  background: $bg-elevated;
+  border: 1px solid $border-default;
+  border-radius: $radius-xl;
+  box-shadow: $shadow-lg;
+  overflow: hidden;
+  animation: slideDown 0.2s ease forwards;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $s3 $s4;
+  border-bottom: 1px solid $border-subtle;
+}
+
+.title {
+  font-family: $font-mono;
+  font-size: 13px;
+  font-weight: 600;
+  color: $text-primary;
+  letter-spacing: 0.02em;
+}
+
+.closeBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: $radius-sm;
+  background: none;
+  border: none;
+  color: $text-muted;
+  transition: all $t-fast;
+
+  &:hover {
+    background: $bg-hover;
+    color: $text-primary;
+  }
+}
+
+.body {
+  padding: $s4;
+}
+
+// Shared action row
+.actions {
+  display: flex;
+  gap: $s2;
+  justify-content: flex-end;
+}
+
+.btnCancel {
+  padding: 7px 14px;
+  border-radius: $radius-md;
+  background: $bg-hover;
+  border: 1px solid $border-default;
+  color: $text-secondary;
+  font-family: $font-mono;
+  font-size: 12px;
+  transition: all $t-fast;
+
+  &:hover {
+    border-color: $border-strong;
+    color: $text-primary;
+  }
+}
+
+.btnConfirm {
+  padding: 7px 14px;
+  border-radius: $radius-md;
+  font-family: $font-mono;
+  font-size: 12px;
+  font-weight: 600;
+  border: none;
+  color: #fff;
+  transition: opacity $t-fast;
+
+  &:hover { opacity: 0.85; }
+  &:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  &.default { background: $accent-mid; }
+  &.danger  { background: $color-error; }
+}
+
+// Input field inside modal
+.fieldLabel {
+  display: block;
+  font-family: $font-mono;
+  font-size: 10px;
+  color: $text-muted;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: $s2;
+}
+
+.fieldInput {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: $radius-md;
+  background: $bg-hover;
+  border: 1px solid $border-default;
+  color: $text-primary;
+  font-family: $font-mono;
+  font-size: 13px;
+  outline: none;
+  margin-bottom: $s4;
+  transition: border-color $t-fast, box-shadow $t-fast;
+
+  &::placeholder { color: $text-muted; }
+
+  &:focus {
+    border-color: $accent-mid;
+    box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.15);
+  }
+}
+
+// Confirm message
+.confirmMsg {
+  color: $text-secondary;
+  font-size: 13px;
+  line-height: 1.6;
+  margin-bottom: $s4;
+}

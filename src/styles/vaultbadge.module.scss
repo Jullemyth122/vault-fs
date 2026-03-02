@@ -1,0 +1,70 @@
+.wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+// ── Vault ID pill ─────────────────────────────────────────────────────────────
+
+.vaultId {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: var(--radius-md);
+    background: var(--accent-dim);
+    border: 1px solid var(--accent);
+}
+
+.shieldIcon {
+    color: var(--accent-light);
+    flex-shrink: 0;
+}
+
+.vaultIdText {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent-light);
+    letter-spacing: 0.06em;
+}
+
+// ── Mode badge ────────────────────────────────────────────────────────────────
+
+.modeBadge {
+    padding: 4px 8px;
+    border-radius: var(--radius-md);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-default);
+}
+
+.modeText {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+// ── Lock button ───────────────────────────────────────────────────────────────
+
+.lockBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    border-radius: var(--radius-md);
+    background: transparent;
+    border: 1px solid var(--border-subtle);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition:
+        background var(--transition-fast),
+        border-color var(--transition-fast),
+        color var(--transition-fast);
+
+    &:hover {
+        background: rgba(239, 68, 68, 0.1);
+        border-color: rgba(239, 68, 68, 0.4);
+        color: var(--color-error);
+    }
+}

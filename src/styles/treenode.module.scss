@@ -1,0 +1,81 @@
+@use './token' as *;
+
+// Outer wrapper (node row + children)
+.nodeWrapper {
+  // parent div for the row + children
+}
+
+// Row (clickable item)
+.row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px 3px 0;
+  border-radius: $radius-sm;
+  cursor: pointer;
+  user-select: none;
+  transition: background $t-fast;
+
+  &:hover:not(.rowSelected) {
+    background: $bg-hover;
+  }
+}
+
+// Selected row state (applied alongside .row)
+.rowSelected {
+  background: $bg-active;
+}
+
+// Chevron toggle icon
+.chevron {
+  width: 14px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: $text-muted;
+}
+
+// Folder/file icon wrapper
+.icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+// File icon — muted default colour
+.fileIcon {
+  color: $text-muted;
+  flex-shrink: 0;
+}
+
+// Node name label
+.name {
+  flex: 1;
+  font-family: $font-mono;
+  font-size: 12px;
+  color: $text-secondary;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: color $t-fast;
+}
+
+// Name when node is selected
+.nameSelected {
+  color: $text-primary;
+}
+
+// Child-count badge
+.count {
+  font-family: $font-mono;
+  font-size: 10px;
+  color: $text-muted;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+// Children container (indenting handled via inline paddingLeft on row)
+.children {
+}

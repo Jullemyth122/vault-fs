@@ -1,0 +1,191 @@
+@use './token' as *;
+
+// ── Main toolbar bar ──────────────────────────────────────────────────────────
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: $s2;
+  padding: 0 $s4;
+  height: $toolbar-height;
+  flex-shrink: 0;
+  background: $bg-surface;
+  border-bottom: 1px solid $border-subtle;
+}
+
+// ── App branding ──────────────────────────────────────────────────────────────
+.appTitle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: $s2;
+  flex-shrink: 0;
+}
+
+.appIcon {
+  color: $accent-light;
+}
+
+.appName {
+  font-family: $font-mono;
+  font-size: 13px;
+  font-weight: 600;
+  color: $accent-light;
+  letter-spacing: 0.04em;
+}
+
+// ── Vertical divider ──────────────────────────────────────────────────────────
+.divider {
+  width: 1px;
+  height: 20px;
+  background: $border-subtle;
+  flex-shrink: 0;
+}
+
+// ── Back / Forward nav buttons ────────────────────────────────────────────────
+.navGroup {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.navBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: $radius-md;
+  background: transparent;
+  border: none;
+  color: $text-secondary;
+  transition: all $t-fast;
+
+  &:hover:not(:disabled) {
+    background: $bg-hover;
+    color: $text-primary;
+  }
+
+  &:disabled {
+    color: $text-disabled;
+  }
+}
+
+// Extra disabled modifier (applied via template literal in TSX)
+.navBtnDisabled {
+  color: $text-disabled;
+  pointer-events: none;
+}
+
+// ── Create buttons (normal state) ─────────────────────────────────────────────
+.createGroup {
+  display: flex;
+  align-items: center;
+  gap: $s1;
+}
+
+.createBtn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: $radius-md;
+  background: transparent;
+  border: 1px solid $border-default;
+  color: $text-muted;
+  font-family: $font-mono;
+  font-size: 11px;
+  transition: all $t-fast;
+
+  &:hover {
+    background: $bg-elevated;
+    border-color: $border-strong;
+    color: $text-primary;
+  }
+}
+
+// ── Create inline input (active create state) ─────────────────────────────────
+.createInput {
+  display: flex;
+  align-items: center;
+  gap: $s2;
+}
+
+.createInputIcon {
+  font-size: 13px;
+  line-height: 1;
+}
+
+.createInputField {
+  padding: 5px 10px;
+  width: 160px;
+  border-radius: $radius-md;
+  background: $bg-elevated;
+  border: 1px solid $accent-mid;
+  color: $text-primary;
+  font-family: $font-mono;
+  font-size: 12px;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.12);
+}
+
+.createInputHint {
+  font-family: $font-mono;
+  font-size: 10px;
+  color: $text-muted;
+}
+
+// ── Spacer ────────────────────────────────────────────────────────────────────
+.spacer {
+  flex: 1;
+}
+
+// ── Tree mode toggle (N-ary / 3-ary) ─────────────────────────────────────────
+.modeToggle {
+  display: flex;
+  align-items: center;
+  gap: $s2;
+  flex-shrink: 0;
+}
+
+.modeToggleIcon {
+  color: $text-muted;
+}
+
+.modeToggleGroup {
+  display: flex;
+  align-items: center;
+  background: $bg-elevated;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+  padding: 2px;
+  gap: 2px;
+}
+
+// Individual tab button
+.modeBtn {
+  padding: 3px 10px;
+  border-radius: $radius-sm;
+  background: transparent;
+  border: none;
+  font-family: $font-mono;
+  font-size: 11px;
+  color: $text-muted;
+  transition: all $t-fast;
+
+  &:hover:not(.modeBtnActive) {
+    color: $text-secondary;
+    background: $bg-hover;
+  }
+}
+
+// Active / selected tab
+.modeBtnActive {
+  background: $accent-dim;
+  border: 1px solid $accent;
+  color: $accent-light;
+  font-weight: 600;
+
+  &:hover {
+    background: $accent-dim;
+  }
+}

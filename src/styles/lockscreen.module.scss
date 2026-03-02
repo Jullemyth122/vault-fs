@@ -1,0 +1,361 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// LockScreen.module.scss
+// ─────────────────────────────────────────────────────────────────────────────
+
+@use './token' as *;
+
+// ── Page wrapper ──────────────────────────────────────────────────────────────
+.page {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: $bg-void;
+  overflow: hidden;
+
+  // Subtle grid background
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(109, 40, 217, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(109, 40, 217, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+
+  // Radial glow behind card
+  &::after {
+    content: '';
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(109, 40, 217, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+}
+
+// ── Card container ────────────────────────────────────────────────────────────
+.container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 420px;
+  padding: $s4;
+  animation: fadeIn 0.4s ease forwards;
+}
+
+// ── Header ────────────────────────────────────────────────────────────────────
+.header {
+  text-align: center;
+  margin-bottom: $s8;
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: $s2;
+  margin-bottom: $s3;
+
+  svg {
+    color: $accent-light;
+    filter: drop-shadow(0 0 8px rgba(167, 139, 250, 0.5));
+  }
+}
+
+.title {
+  font-family: $font-mono;
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: $text-primary;
+
+  // Shimmer effect on title
+  background: linear-gradient(
+    90deg,
+    $text-primary 0%,
+    $accent-light 50%,
+    $text-primary 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s linear infinite;
+}
+
+.subtitle {
+  font-size: 12px;
+  color: $text-muted;
+  font-family: $font-mono;
+  letter-spacing: 0.04em;
+}
+
+// ── Card ──────────────────────────────────────────────────────────────────────
+.card {
+  background: $bg-surface;
+  border: 1px solid $border-default;
+  border-radius: $radius-xl;
+  padding: $s6;
+  box-shadow: $shadow-glow;
+  animation: pulse-glow 4s ease infinite;
+}
+
+// ── Form field ────────────────────────────────────────────────────────────────
+.field {
+  margin-bottom: $s5;
+}
+
+.label {
+  display: block;
+  font-family: $font-mono;
+  font-size: 10px;
+  font-weight: 500;
+  color: $text-muted;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: $s2;
+}
+
+// ── Password input ────────────────────────────────────────────────────────────
+.inputWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 12px;
+  color: $text-muted;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  transition: color $t-fast;
+}
+
+.input {
+  width: 100%;
+  padding: 10px 40px;
+  background: $bg-elevated;
+  border: 1px solid $border-default;
+  border-radius: $radius-md;
+  color: $text-primary;
+  font-family: $font-mono;
+  font-size: 13px;
+  outline: none;
+  transition: border-color $t-fast, box-shadow $t-fast;
+
+  &::placeholder {
+    color: $text-muted;
+  }
+
+  &:focus {
+    border-color: $accent-mid;
+    box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.15);
+
+    + .inputIcon {
+      color: $accent-light;
+    }
+  }
+}
+
+.eyeBtn {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  color: $text-muted;
+  display: flex;
+  align-items: center;
+  padding: $s1;
+  border-radius: $radius-xs;
+  transition: color $t-fast;
+
+  &:hover {
+    color: $text-secondary;
+  }
+}
+
+// ── Strength bar ──────────────────────────────────────────────────────────────
+.strengthBar {
+  margin-top: $s2;
+  height: 2px;
+  background: $bg-hover;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.strengthFill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.3s ease, background-color 0.3s ease;
+
+  &.weak   { width: 25%; background: $color-error; }
+  &.medium { width: 55%; background: $color-warning; }
+  &.strong { width: 100%; background: $color-success; }
+}
+
+.strengthText {
+  font-family: $font-mono;
+  font-size: 10px;
+  margin-top: $s1;
+
+  &.weak   { color: $color-error; }
+  &.medium { color: $color-warning; }
+  &.strong { color: $color-success; }
+}
+
+// ── Mode toggle ───────────────────────────────────────────────────────────────
+.modeGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $s2;
+}
+
+.modeBtn {
+  padding: $s2 $s3;
+  border-radius: $radius-md;
+  font-family: $font-mono;
+  font-size: 11px;
+  font-weight: 500;
+  border: 1px solid $border-default;
+  background: $bg-elevated;
+  color: $text-muted;
+  transition: all $t-fast;
+  text-align: center;
+
+  &:hover:not(.modeBtnActive) {
+    border-color: $border-strong;
+    color: $text-secondary;
+    background: $bg-hover;
+  }
+
+  &.modeBtnActive {
+    background: $accent-dim;
+    border-color: $accent-mid;
+    color: $accent-light;
+  }
+}
+
+// ── Error message ─────────────────────────────────────────────────────────────
+.error {
+  margin-bottom: $s4;
+  padding: $s2 $s3;
+  border-radius: $radius-md;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  color: $color-error;
+  font-family: $font-mono;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+// ── Submit button ─────────────────────────────────────────────────────────────
+.submitBtn {
+  width: 100%;
+  padding: 11px;
+  border-radius: $radius-md;
+  border: none;
+  font-family: $font-mono;
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $s2;
+  transition: all $t-normal;
+  position: relative;
+  overflow: hidden;
+
+  &.active {
+    background: $accent-mid;
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(109, 40, 217, 0.4);
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 60%);
+    }
+
+    &:hover {
+      background: $accent-light;
+      box-shadow: 0 4px 24px rgba(109, 40, 217, 0.6);
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  &.inactive {
+    background: $bg-elevated;
+    color: $text-disabled;
+    border: 1px solid $border-default;
+  }
+}
+
+.spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+// ── Recent vaults ─────────────────────────────────────────────────────────────
+.recentSection {
+  margin-top: $s5;
+  animation: fadeIn 0.3s ease 0.1s both;
+}
+
+.recentLabel {
+  font-family: $font-mono;
+  font-size: 10px;
+  color: $text-muted;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: $s2;
+}
+
+.recentList {
+  display: flex;
+  flex-direction: column;
+  gap: $s1;
+}
+
+.recentItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $s2 $s3;
+  border-radius: $radius-md;
+  background: $bg-surface;
+  border: 1px solid $border-faint;
+  transition: border-color $t-fast;
+
+  &:hover {
+    border-color: $border-subtle;
+  }
+}
+
+.recentId {
+  font-family: $font-mono;
+  font-size: 12px;
+  color: $accent-light;
+  letter-spacing: 0.06em;
+}
+
+.recentMeta {
+  font-family: $font-mono;
+  font-size: 10px;
+  color: $text-muted;
+}

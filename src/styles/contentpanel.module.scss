@@ -1,0 +1,110 @@
+@use './token' as *;
+
+// Main panel container
+.panel {
+  padding: $s5;
+  animation: fadeIn 0.2s ease forwards;
+}
+
+// Breadcrumb row at top of panel
+.breadcrumbRow {
+  margin-bottom: $s5;
+}
+
+// ── Empty state (folder with no children) ────────────────────────────────────
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px $s4;
+  gap: $s3;
+  color: $text-muted;
+}
+
+.emptyIcon {
+  opacity: 0.2;
+  color: $text-muted;
+}
+
+.emptyTitle {
+  font-family: $font-mono;
+  font-size: 13px;
+  color: $text-muted;
+}
+
+.emptySubtitle {
+  font-size: 11px;
+  color: $text-disabled;
+}
+
+// ── Grid of child items ───────────────────────────────────────────────────────
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: $s2;
+}
+
+// Grid item card (renamed from .item)
+.gridItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $s2;
+  padding: $s4 $s3;
+  border-radius: $radius-lg;
+  background: $bg-surface;
+  border: 1px solid $border-subtle;
+  cursor: pointer;
+  text-align: center;
+  transition: all $t-fast;
+
+  &:hover {
+    background: $bg-elevated;
+    border-color: $border-default;
+    transform: translateY(-1px);
+    box-shadow: $shadow-sm;
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.itemName {
+  font-family: $font-mono;
+  font-size: 11px;
+  color: $text-secondary;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.itemMeta {
+  font-size: 10px;
+  color: $text-muted;
+}
+
+// ── File detail card (when a file node is selected) ───────────────────────────
+.fileCard {
+  display: flex;
+  align-items: center;
+  gap: $s4;
+  padding: $s5;
+  border-radius: $radius-xl;
+  background: $bg-surface;
+  border: 1px solid $border-default;
+}
+
+.fileName {
+  font-family: $font-mono;
+  font-size: 14px;
+  color: $text-primary;
+}
+
+.fileMeta {
+  font-size: 11px;
+  color: $text-muted;
+  margin-top: 4px;
+}

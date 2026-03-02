@@ -52,6 +52,8 @@ function assert(condition: boolean, message: string): void {
   else fail(message);
 }
 
+const password = "Password123!";
+
 // ─── Test: tree.ts ────────────────────────────────────────────────────────────
 
 section("tree.ts");
@@ -59,6 +61,8 @@ section("tree.ts");
 const root = createRootNode("root");
 const folderA = createNode({ name: "documents", type: "folder" });
 const folderB = createNode({ name: "media", type: "folder" });
+const folderC = createNode({ name: "projects", type: "folder" });
+
 const fileC = createNode({ name: "readme.txt", type: "file", extension: ".txt" });
 const fileD = createNode({ name: "photo.jpg", type: "file", extension: ".jpg" });
 
@@ -68,7 +72,12 @@ tree = insertChild(tree, root.id, folderB, "nary");
 tree = insertChild(tree, folderA.id, fileC, "nary");
 tree = insertChild(tree, folderB.id, fileD, "nary");
 
-assert(tree.children.length === 2, "root has 2 children");
+
+tree = insertChild(tree, root.id, folderC, "nary");
+tree = insertChild(tree, folderC.id, fileC, "nary");
+tree = insertChild(tree, folderC.id, fileD, "nary");
+
+assert(tree.children.length === 3, "root has 3 children");
 assert(findNode(tree, folderA.id)?.name === "documents", "findNode finds documents");
 assert(findNode(tree, fileC.id)?.name === "readme.txt", "findNode finds nested file");
 assert(getPath(tree, fileC.id).length === 3, "path to readme.txt has 3 nodes");
@@ -102,8 +111,8 @@ assert(!findNode(moved, folderA.id)!.children.some(c => c.id === fileC.id), "mov
 
 // Stats
 const stats = getTreeStats(tree);
-assert(stats.totalNodes === 5, `stats: totalNodes=5, got ${stats.totalNodes}`);
-assert(stats.totalFiles === 2, `stats: totalFiles=2, got ${stats.totalFiles}`);
+assert(stats.totalNodes === 8, `stats: totalNodes=8, got ${stats.totalNodes}`);
+assert(stats.totalFiles === 4, `stats: totalFiles=4, got ${stats.totalFiles}`);
 assert(stats.maxDepth === 2, `stats: maxDepth=2, got ${stats.maxDepth}`);
 
 // ─── Test: treeTraversal.ts ───────────────────────────────────────────────────
@@ -113,7 +122,7 @@ section("treeTraversal.ts");
 const bfs = bfsToArray(tree);
 assert(bfs[0].name === "root", "BFS: root first");
 assert(bfs[1].name === "documents" || bfs[1].name === "media", "BFS: children second");
-assert(bfs.length === 5, `BFS: all 5 nodes, got ${bfs.length}`);
+assert(bfs.length === 8, `BFS: all 6 nodes, got ${bfs.length}`);
 
 const dfs = dfsPreOrderToArray(tree);
 assert(dfs[0].name === "root", "DFS: root first");
@@ -125,7 +134,8 @@ assert(searchResults[0].node.name === "documents", "search finds 'documents'");
 assert(searchResults[0].path[0].name === "root", "search path starts at root");
 
 const level1 = getLevel(tree, 1);
-assert(level1.length === 2, "getLevel(1) returns 2 nodes");
+assert(level1.length > 0, `getLevel(1) returns ${level1.length} nodes`);
+assert(level1.length === 3, "getLevel(1) returns 2 nodes");
 
 const leaves = getLeafNodes(tree);
 assert(leaves.every(n => n.children.length === 0), "getLeafNodes: all leaves have no children");
@@ -187,7 +197,7 @@ section("hashPassword.ts (async)");
 
   section("treeGenerator.ts (async)");
 
-  const hash = await hashPassword("myVaultPassword");
+  const hash = await hashPassword(password);
 
   const treeA_nary = generateTreeFromHash(hash, "nary");
   const treeA_nary2 = generateTreeFromHash(hash, "nary");
@@ -228,7 +238,7 @@ section("hashPassword.ts (async)");
   console.log("📊 Sample generated tree stats:");
   console.log(`   N-ary:   ${treeStats2.totalNodes} nodes, depth ${treeStats2.maxDepth}`);
   console.log(`   Trinary: ${getTreeStats(treeA_trinary).totalNodes} nodes, depth ${getTreeStats(treeA_trinary).maxDepth}`);
-  console.log(`   Vault ID for "myVaultPassword": ${hashToVaultId(hash)}`);
+  console.log(`   Vault ID for ${password}: ${hashToVaultId(hash)}`);
 })();
 
 // Needed for TS type-check in the IIFE above
