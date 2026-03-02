@@ -1,5 +1,6 @@
 @use './token' as *;
 
+// ── Backdrop ──────────────────────────────────────────────────────────────────
 .backdrop {
   position: fixed;
   inset: 0;
@@ -13,6 +14,7 @@
   animation: fadeIn 0.15s ease forwards;
 }
 
+// ── Dialog box ────────────────────────────────────────────────────────────────
 .dialog {
   width: 100%;
   background: $bg-elevated;
@@ -23,6 +25,7 @@
   animation: slideDown 0.2s ease forwards;
 }
 
+// ── Header ────────────────────────────────────────────────────────────────────
 .header {
   display: flex;
   align-items: center;
@@ -49,6 +52,7 @@
   background: none;
   border: none;
   color: $text-muted;
+  cursor: pointer;
   transition: all $t-fast;
 
   &:hover {
@@ -57,18 +61,21 @@
   }
 }
 
+// ── Body ──────────────────────────────────────────────────────────────────────
 .body {
   padding: $s4;
 }
 
-// Shared action row
+// ── Shared action row ─────────────────────────────────────────────────────────
 .actions {
   display: flex;
   gap: $s2;
   justify-content: flex-end;
+  margin-top: $s4;
 }
 
-.btnCancel {
+// Cancel button
+.cancelBtn {
   padding: 7px 14px;
   border-radius: $radius-md;
   background: $bg-hover;
@@ -76,6 +83,7 @@
   color: $text-secondary;
   font-family: $font-mono;
   font-size: 12px;
+  cursor: pointer;
   transition: all $t-fast;
 
   &:hover {
@@ -84,7 +92,8 @@
   }
 }
 
-.btnConfirm {
+// Confirm button — default variant
+.confirmBtn {
   padding: 7px 14px;
   border-radius: $radius-md;
   font-family: $font-mono;
@@ -92,17 +101,31 @@
   font-weight: 600;
   border: none;
   color: #fff;
+  cursor: pointer;
   transition: opacity $t-fast;
 
   &:hover { opacity: 0.85; }
   &:disabled { opacity: 0.4; cursor: not-allowed; }
-
-  &.default { background: $accent-mid; }
-  &.danger  { background: $color-error; }
 }
 
-// Input field inside modal
-.fieldLabel {
+.confirmBtnDefault {
+  background: $accent-mid;
+}
+
+.confirmBtnDanger {
+  background: $color-error;
+}
+
+// Confirm message text
+.confirmMessage {
+  color: $text-secondary;
+  font-size: 13px;
+  line-height: 1.6;
+  margin-bottom: $s4;
+}
+
+// ── Input modal ───────────────────────────────────────────────────────────────
+.inputLabel {
   display: block;
   font-family: $font-mono;
   font-size: 10px;
@@ -112,7 +135,7 @@
   margin-bottom: $s2;
 }
 
-.fieldInput {
+.input {
   width: 100%;
   padding: 8px 10px;
   border-radius: $radius-md;
@@ -122,7 +145,6 @@
   font-family: $font-mono;
   font-size: 13px;
   outline: none;
-  margin-bottom: $s4;
   transition: border-color $t-fast, box-shadow $t-fast;
 
   &::placeholder { color: $text-muted; }
@@ -133,10 +155,27 @@
   }
 }
 
-// Confirm message
-.confirmMsg {
-  color: $text-secondary;
-  font-size: 13px;
-  line-height: 1.6;
-  margin-bottom: $s4;
+// Submit button
+.submitBtn {
+  padding: 7px 14px;
+  border-radius: $radius-md;
+  font-family: $font-mono;
+  font-size: 12px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all $t-fast;
+}
+
+.submitBtnActive {
+  background: $accent-mid;
+  color: #fff;
+
+  &:hover { opacity: 0.85; }
+}
+
+.submitBtnDisabled {
+  background: $bg-hover;
+  color: $text-disabled;
+  cursor: not-allowed;
 }

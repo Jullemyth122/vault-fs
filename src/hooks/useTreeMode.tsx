@@ -10,7 +10,6 @@
 
 import { useCallback } from "react";
 import { useVaultStore } from "../store/useVaultStore";
-import { canAddChild, findNode } from "../core/tree";
 import type { TreeMode, TreeNode } from "../core/tree";
 
 export interface TreeModeInfo {

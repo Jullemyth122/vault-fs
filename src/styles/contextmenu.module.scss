@@ -1,15 +1,17 @@
 @use './token' as *;
 
+// Click-away overlay
 .overlay {
   position: fixed;
   inset: 0;
   z-index: 999;
 }
 
+// Menu panel
 .menu {
   position: fixed;
   z-index: 1000;
-  min-width: 185px;
+  min-width: 190px;
   background: $bg-elevated;
   border: 1px solid $border-default;
   border-radius: $radius-lg;
@@ -18,6 +20,7 @@
   animation: slideDown 0.1s ease forwards;
 }
 
+// Header showing the node name
 .nodeLabel {
   display: flex;
   align-items: center;
@@ -30,6 +33,14 @@
   color: $text-muted;
 }
 
+.nodeLabelIconFolder {
+  flex-shrink: 0;
+}
+
+.nodeLabelIconFile {
+  flex-shrink: 0;
+}
+
 .nodeLabelName {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -37,9 +48,11 @@
   max-width: 140px;
 }
 
-.item {
+// Standard menu item button
+.menuItem {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: $s2;
   width: 100%;
   padding: 6px 10px;
@@ -51,72 +64,60 @@
   color: $text-secondary;
   text-align: left;
   transition: all $t-fast;
+  cursor: pointer;
 
   &:hover:not(:disabled) {
     background: $bg-hover;
     color: $text-primary;
   }
-
-  &:disabled {
-    color: $text-disabled;
-    cursor: not-allowed;
-  }
-
-  &.danger {
-    color: rgba(239, 68, 68, 0.75);
-
-    &:hover:not(:disabled) {
-      background: rgba(239, 68, 68, 0.08);
-      color: $color-error;
-    }
-  }
 }
 
-.itemInner {
+// Inner flex row (icon + label)
+.menuItemInner {
   display: flex;
   align-items: center;
   gap: $s2;
-  flex: 1;
 }
 
+// Active/open state (e.g. color submenu open)
+.menuItemActive {
+  background: $bg-hover;
+  color: $text-primary;
+}
+
+// Disabled item
+.menuItemDisabled {
+  color: $text-disabled;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+// Danger variant (delete)
+.menuItemDanger {
+  color: rgba(239, 68, 68, 0.75);
+
+  &:hover:not(:disabled) {
+    background: rgba(239, 68, 68, 0.08);
+    color: $color-error;
+  }
+}
+
+// Horizontal divider between sections
 .divider {
   height: 1px;
   background: $border-subtle;
   margin: 4px 0;
 }
 
-// Color submenu trigger row
-.colorRow {
+// ── Color Picker ──────────────────────────────────────────────────────────────
+
+// Wrapper that positions the flyout panel relative to the trigger row
+.colorPickerWrapper {
   position: relative;
 }
 
-.colorTrigger {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding: 6px 10px;
-  border-radius: $radius-sm;
-  background: none;
-  border: none;
-  font-family: $font-mono;
-  font-size: 12px;
-  color: $text-secondary;
-  transition: all $t-fast;
-
-  &:hover, &.open {
-    background: $bg-hover;
-    color: $text-primary;
-  }
-}
-
-.colorTriggerLeft {
-  display: flex;
-  align-items: center;
-  gap: $s2;
-}
-
-.colorPicker {
+// The flyout panel of color swatches
+.colorPanel {
   position: absolute;
   left: 100%;
   top: 0;
@@ -132,7 +133,8 @@
   animation: fadeIn 0.1s ease forwards;
 }
 
-.colorDot {
+// A single color swatch button
+.colorSwatch {
   width: 20px;
   height: 20px;
   border-radius: 50%;
@@ -141,10 +143,15 @@
   transition: transform $t-fast;
 
   &:hover { transform: scale(1.2); }
-  &.selected { border-color: white; }
 }
 
-.colorNone {
+// Active (currently selected) swatch
+.colorSwatchActive {
+  border-color: white;
+}
+
+// "Clear color" swatch
+.colorSwatch_clear {
   width: 20px;
   height: 20px;
   border-radius: 50%;

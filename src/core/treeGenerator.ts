@@ -18,7 +18,7 @@
  *   - Controlling complexity with depth limits and probability curves
  */
 
-import { type TreeNode, type TreeMode, TRINARY_MAX_CHILDREN, createNode, createRootNode } from "./tree";
+import { type TreeNode, type TreeMode, TRINARY_MAX_CHILDREN } from "./tree";
 import { createSeededRandom, hashStringToSeeds, makeSeededIdFactory } from "./seedRandom";
 
 // ─── Generator Config ─────────────────────────────────────────────────────────
